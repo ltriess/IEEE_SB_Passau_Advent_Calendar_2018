@@ -42,13 +42,10 @@ def main():
     blank = 1
     current_room = 0
     while blank < 2:
-        if DEBUG:
-            try:
-                input_str = input()
-            except EOFError:
-                break
-        else:
+        try:
             input_str = input()
+        except EOFError:
+            break
         if input_str:
             if blank == 0:
                 preference, name_of_classmate = input_str.split(' ')
