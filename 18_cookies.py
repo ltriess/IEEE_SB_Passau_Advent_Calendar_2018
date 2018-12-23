@@ -3,6 +3,32 @@ import sys
 DEBUG = True
 
 
+def coords_2D_to_1D(row, column, width):
+    return row * width + column
+
+
+def coords_1D_to_2D(index, width):
+    return index // width, index % width
+
+
+def compute_deviation(current_cookie, grid, cookie_size):
+    curent_sum = 0
+    for j in range(cookie_size ** 2):
+        cookie_r, cookie_c = coords_1D_to_2D(j, cookie_size)
+        curent_sum += grid[current_cookie[0] + cookie_r][current_cookie[1] + cookie_c]
+
+    return curent_sum / (cookie_size ** 2)
+
+
+def compute_variance(current_cookie, deviation, grid, cookie_size):
+    variance = 0
+    for j in range(cookie_size ** 2):
+        cookie_r, cookie_c = coords_1D_to_2D(j, cookie_size)
+        variance += abs(grid[current_cookie[0] + cookie_r][current_cookie[1] + cookie_c] - deviation) ** 2
+
+    return variance / (cookie_size ** 2)
+
+
 def main():
 
     if DEBUG:
@@ -17,13 +43,15 @@ def main():
         grid.append([int(i) for i in input().split()])
 
     out_size = grid_size - cookie_size + 1
-    sums = [[None]*out_size for _ in range(out_size)]
-    for i in range(out_size):
-        for j in range(out_size):
-            sums[i][j] = sum(sum([m[j:(j + cookie_size)] for m in grid[i:(i + cookie_size)]], []))
+    sums = []
+    for i in range(out_size ** 2):
+        deviation = compute_deviation(coords_1D_to_2D(i, out_size), grid, cookie_size)
+        variance = compute_variance(coords_1D_to_2D(i, out_size), deviation, grid, cookie_size)
+        sums.append(deviation - variance)
 
-    coords = [[y, x] for x, m in enumerate(sums) for y, val in enumerate(m) if val == max(max(sums))][0]
-    print('{} {}'.format(coords[0], coords[1]))
+    coords = coords_1D_to_2D(sums.index(max(sums)), out_size)
+    print('{} {}'.format(coords[1], coords[0]))
+
 
 
 if __name__ == "__main__":
