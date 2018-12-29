@@ -1,0 +1,2 @@
+w,Ute
+m,Landolf,m,Hartmann,m,Alfred,m,Sturmhard,m,Manfred,w,Gunhild
